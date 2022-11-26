@@ -142,7 +142,8 @@ class Report:
             for sumbol in ["D", "E"]:
                 list.append(ws1[sumbol + str(i)].value)
             lists_by_city2.append(list)
-        wb.save('report.xlsx')
+        if inputValue.jobs_or_statistics == 'Вакансии':
+            wb.save('report.xlsx')
 
     def createPDF(self):
 
@@ -228,7 +229,8 @@ def creatFirstGraf():
     fig.tight_layout()
 
     plt.savefig('D:\\PythonProject\\report\\saved_figure.png')
-    plt.show()
+    if inputValue.jobs_or_statistics == 'Статистика':
+        plt.show()
 
 
 def fillColomYear(ws, years, sumbol, dict_len_colum):
@@ -288,10 +290,12 @@ dict_func = {
 class InputConect:
     file_name = ""
     name_profession = ""
+    jobs_or_statistics = ''
 
     def __init__(self):
         self.file_name = 'C:\\Users\\user\\Desktop\\Other\\vacancies_by_year.csv'  # input("Введите название файла: ")
         self.name_profession = input("Введите название профессии: ")
+        self.jobs_or_statistics = input("Вакансии или Статистика(нужно вписать Вакансии или Статистика): ")
 
 
 class DataSet:
@@ -400,6 +404,9 @@ def convertListAndOutput(countVacancies):
 
 
 inputValue = InputConect()
+if inputValue.jobs_or_statistics not in ['Вакансии', 'Статистика']:
+    print("Ввод некорректен")
+    sys.exit()
 
 data_set = DataSet()
 headers, list_row = data_set.csv_reader(inputValue.file_name)
