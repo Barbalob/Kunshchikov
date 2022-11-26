@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+    <style>
+            body{
+                font-family: Verdana;
+                text-align: center;
+            }
+            table {
+                border-collapse: collapse;
+                padding: 20px;
+                display: inline-block;
+            }
+            TD, TH {
+                padding: 5px;
+                border: 1px solid #000;
+            }
+            .double_table{
+                padding: 30px;
+            }
+    </style>
+</head>
+<body>
+    <main>
+        <h1 align="center">
+            Аналитика по зарплатам и городам для<br>
+            профессии {{ name }}
+        </h1>
+        <img width="750" src="file:///D:/PythonProject/report/{{ image_file }}">
+        <h2 align="center">
+            Статистика по годам
+        </h2>
+
+
+        <table>
+            <tr>
+                <th>Год</th>
+                <th>Средняя зарплата</th>
+                <th>Средняя зарплата - Программист</th>
+                <th>Количество вакансий</th>
+                <th>Количество вакансий - Программист</th>
+            </tr>
+            {% for item in lists_by_years %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                    <td>{{ item[4] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <h2 align="center">Статистика по городам</h2>
+
+        <table class="double_table">
+            <tr>
+                <th>Город</th>
+                <th>Уровень зарплат</th>
+            </tr>
+            {% for item in lists_by_city1 %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <table class="double_table">
+            <tr>
+                <th>Город</th>
+                <th>Доля вакансий</th>
+            </tr>
+            {% for item in lists_by_city2 %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </main>
+</body>
+</html>
