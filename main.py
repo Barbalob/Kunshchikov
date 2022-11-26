@@ -293,7 +293,7 @@ class InputConect:
     jobs_or_statistics = ''
 
     def __init__(self):
-        self.file_name = 'C:\\Users\\user\\Desktop\\Other\\vacancies_by_year.csv'  # input("Введите название файла: ")
+        self.file_name = input("Введите название файла: ")
         self.name_profession = input("Введите название профессии: ")
         self.jobs_or_statistics = input("Вакансии или Статистика(нужно вписать Вакансии или Статистика): ")
 
