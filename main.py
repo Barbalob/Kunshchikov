@@ -45,16 +45,31 @@ lists_by_city2 = []
 
 
 def yearCheck(years):
+    """
+    проверяет переменные DynamicsOfTheLevelOfSalariesByYearsForChosenProfession и DynamicsOfTheNumbeOfVacanciesByYearsForChosenProfession
+    чтоб в них были года из years если нет, создает ключ со значением 0
+    :param years: Лист Лет по которым собрана стратистика
+    :return:
+    """
     for year in years:
         if year not in DynamicsOfTheLevelOfSalariesByYearsForChosenProfession.keys():
             DynamicsOfTheLevelOfSalariesByYearsForChosenProfession[year] = 0
-
         if year not in DynamicsOfTheNumbeOfVacanciesByYearsForChosenProfession.keys():
             DynamicsOfTheNumbeOfVacanciesByYearsForChosenProfession[year] = 0
 
 
 class Report:
+    """
+    Нужен для анализа данных
+    """
     def generate_excel(self, sortedSalaryLevelsByCity, sortedShareVacanciesByCity):
+        """
+        создает excel документ который включает в себя:
+        Статистику по годам и Статистику по городам
+        :param sortedSalaryLevelsByCity: отсортированные лист заработной платы по городам
+        :param sortedShareVacanciesByCity: отсортированные лист вакансий по городам
+        :return:
+        """
         wb = Workbook()
         ws = wb.active
         ws.title = "Статистика по годам"
@@ -146,7 +161,10 @@ class Report:
             wb.save('report.xlsx')
 
     def createPDF(self):
-
+        """
+        создает PDF файл со статистикой
+        :return:
+        """
         env = Environment(loader=FileSystemLoader(""))
         template = env.get_template("sample.html")
 
@@ -157,10 +175,26 @@ class Report:
         pdfkit.from_string(pdf_template, 'Report.pdf', configuration=config, options={"enable-local-file-access": ""})
 
     def generate_image(self):
+        """
+        Рисует график статистики
+        :return:
+        """
         creatFirstGraf()
 
 
 def creatFirstGraf():
+    """
+    Рисует и созраняет график статистики:
+
+    1) диаграмма - уровень зарплат по годам для вывода динамики уровня зарплат по годам как общий, так и для выбранной профессии,
+
+    2) диаграмма - количество вакансий по годам как общий, так и для выбранной профессии,
+
+    3) горизонтальная диаграмма - уровень зарплат по городам,
+
+    4) круговая диаграмма - количество вакансий по городам.
+    :return:
+    """
     years = []
     city = []
     cityShareVacancies = []
@@ -234,6 +268,14 @@ def creatFirstGraf():
 
 
 def fillColomYear(ws, years, sumbol, dict_len_colum):
+    """
+    заполняет колонки Год
+    :param ws: Станица в excel
+    :param years: Год
+    :param sumbol: Символ
+    :param dict_len_colum: Словарь длинны колонки
+    :return:
+    """
     maxLen[0] = dict_len_colum[sumbol]
     for num in range(2, len(years) + 2):
         ws[sumbol + str(num)].border = thin_border
@@ -243,6 +285,15 @@ def fillColomYear(ws, years, sumbol, dict_len_colum):
 
 
 def fillColomYearValue(ws, years, sumbol, dict, dict_len_colum):
+    """
+    заполняет значение колонки Год
+    :param ws: Станица в excel
+    :param years: Год
+    :param sumbol: Символ
+    :param dict: Словарь
+    :param dict_len_colum: Словарь длинны колонки
+    :return:
+    """
     maxLen[0] = dict_len_colum[sumbol]
     for num in range(2, len(years) + 2):
         ws[sumbol + str(num)].border = thin_border
@@ -252,6 +303,14 @@ def fillColomYearValue(ws, years, sumbol, dict, dict_len_colum):
 
 
 def fillColomCity(ws1, dict, sumbol, dict_len_colum):
+    """
+    заполняет колонки город
+    :param ws1: Станица в excel
+    :param dict: Словарь
+    :param sumbol: Символ
+    :param dict_len_colum: Словарь длинны колонки
+    :return:
+    """
     maxLen[0] = dict_len_colum[sumbol]
     i = 2
     for name in dict:
@@ -265,6 +324,15 @@ def fillColomCity(ws1, dict, sumbol, dict_len_colum):
 
 
 def fillColomCityValue(ws1, dict, sumbol, dict_len_colum, special_character=""):
+    """
+    заполняет значение колонки город
+    :param ws1: Станица в excel
+    :param dict: Словарь
+    :param sumbol: Символ
+    :param dict_len_colum: Словарь длинны колонки
+    :param special_character: Специальные символы
+    :return:
+    """
     maxLen[0] = dict_len_colum[sumbol]
     i = 2
     for name in dict:
@@ -288,20 +356,41 @@ dict_func = {
 
 
 class InputConect:
+    """
+    Класс для ввода начальные данных
+
+    Attributes:
+        file_name(str): Директория нахождения файла
+        name_profession(str): Профессия для Аналитики
+        jobs_or_statistics(str): Как Анализировать
+    """
     file_name = ""
     name_profession = ""
     jobs_or_statistics = ''
 
     def __init__(self):
+        """
+        Инициализирует входнеы данные
+        """
         self.file_name = input("Введите название файла : ")
         self.name_profession = input("Введите название профессии: ")
         self.jobs_or_statistics = input("Вакансии или Статистика(нужно вписать Вакансии или Статистика): ")
 
 
 class DataSet:
+    """
+    Класс для  Парисинга,Обработки входных данных
+    Attributes:
+        file_name(str): Директория нахождения файла
+    """
     file_name = ""
 
     def csv_reader(self, file_name):
+        """
+        Считывает CSV Файл и берет оттуда данные
+        :param file_name: Директория нахождения файла
+        :return: Заголовки и Данные
+        """
         self.file_name = file_name
         with open(file_name, 'r', newline='', encoding='utf-8-sig') as csvfile:
             data = csv.reader(csvfile, delimiter=',')
@@ -315,6 +404,12 @@ class DataSet:
             return headers, list_row
 
     def csv_filter(self, headers, list_row):
+        """
+        Фильтруе входные данные
+        :param headers: заголовки
+        :param list_row: Данные
+        :return:
+        """
         if len(list_row) == 0:
             print("Нет данных")
             sys.exit()
@@ -343,6 +438,13 @@ class DataSet:
 
 
 def completingDictionary(dictCompleting, dict, name):
+    """
+    Создает Словари с данными
+    :param dictCompleting:  Словарь с Словарями данных
+    :param dict: Заполяемый словарь
+    :param name: Имя заголовка
+    :return:
+    """
     if name not in dictCompleting.keys():
         dictCompleting[name] = [
             int((float(dict['salary_from']) + float(dict['salary_to'])) / 2) * currency_to_rub[dict['salary_currency']],
@@ -355,6 +457,13 @@ def completingDictionary(dictCompleting, dict, name):
 
 
 def countCompletingDictionary(dictCompleting, dict, name):
+    """
+    Количество Словарей
+    :param dictCompleting: Словарь с Словарями данных
+    :param dict: Заполяемый словарь
+    :param name: Имя заголовка
+    :return:
+    """
     if name not in dictCompleting.keys():
         dictCompleting[name] = 1
     else:
@@ -362,6 +471,13 @@ def countCompletingDictionary(dictCompleting, dict, name):
 
 
 def getValueFromArray(list, countVacancies=0, rounded=0):
+    """
+    Округляет при делении значения в массиве
+    :param list: Массив
+    :param countVacancies: Количество вакансий
+    :param rounded: Округление
+    :return:
+    """
     for i in list:
         if rounded == 0:
             list[i] = int(list[i][0] / list[i][1])
@@ -370,6 +486,11 @@ def getValueFromArray(list, countVacancies=0, rounded=0):
 
 
 def convertListAndOutput(countVacancies):
+    """
+    Сортирует полученные данные и производить их Анализ
+    :param countVacancies: Количество вакансий
+    :return:
+    """
     getValueFromArray(DynamicsOfSalaryLevelsByYears)
     getValueFromArray(DynamicsOfTheLevelOfSalariesByYearsForChosenProfession)
     getValueFromArray(ShareVacanciesByCity, countVacancies, 4)
